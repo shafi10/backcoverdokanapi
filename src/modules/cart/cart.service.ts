@@ -17,10 +17,12 @@ export class CartService {
 
   async createCart(cartInfo: CartDto, req: Request): Promise<GetStatus> {
     try {
-      let decode: any = jwt_decode(req?.headers?.authorization);
-      let isExists = await this.cartModel.findOne({ userId: decode?.user?.id });
+      const decode: any = jwt_decode(req?.headers?.authorization);
+      const isExists = await this.cartModel.findOne({
+        userId: decode?.user?.id,
+      });
       if (isExists) {
-        let isProductExits = isExists?.productList.findIndex(
+        const isProductExits = isExists?.productList.findIndex(
           (item) => item?.productId === cartInfo?.productId,
         );
         let prodList = [];
@@ -31,7 +33,7 @@ export class CartService {
           prodList = [...isExists?.productList, cartInfo];
         }
 
-        let updateCart = {
+        const updateCart = {
           userId: decode?.user?.id,
           productList: prodList,
         };
@@ -43,7 +45,7 @@ export class CartService {
           },
         );
       } else {
-        let newCart = {
+        const newCart = {
           userId: decode?.user?.id,
           productList: [
             {
@@ -66,18 +68,18 @@ export class CartService {
 
   async findAllCart(req: Request): Promise<any> {
     try {
-      let decode: any = jwt_decode(req?.headers?.authorization);
+      const decode: any = jwt_decode(req?.headers?.authorization);
       const cartList = await this.cartModel
         .findOne({ userId: decode?.user?.id })
         .select('-userId');
 
-      let ProductList = [];
+      const ProductList = [];
       for (let i = 0; i < cartList.productList.length; i++) {
         const info = await this.productModel.findOne({
           _id: cartList.productList[i].productId,
         });
 
-        let newObj = {
+        const newObj = {
           productInfo: info,
           cartInfo: cartList.productList[i],
         };
@@ -85,7 +87,7 @@ export class CartService {
         ProductList.push(newObj);
       }
 
-      let resObj = {
+      const resObj = {
         _id: cartList?._id,
         productList: ProductList,
       };
@@ -96,15 +98,17 @@ export class CartService {
 
   async deleteCartItem(pId: string, req: Request): Promise<GetStatus> {
     try {
-      let decode: any = jwt_decode(req?.headers?.authorization);
-      let isExists = await this.cartModel.findOne({ userId: decode?.user?.id });
+      const decode: any = jwt_decode(req?.headers?.authorization);
+      const isExists = await this.cartModel.findOne({
+        userId: decode?.user?.id,
+      });
 
-      let isProductExits = isExists?.productList.findIndex(
+      const isProductExits = isExists?.productList.findIndex(
         (item) => item?.productId === pId,
       );
       isExists?.productList.splice(isProductExits, 1);
 
-      let updateCart = {
+      const updateCart = {
         userId: decode?.user?.id,
         productList: isExists?.productList,
       };

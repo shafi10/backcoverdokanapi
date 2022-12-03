@@ -12,8 +12,8 @@ export class AddressService {
     @InjectModel(Address.name) private addressModel: Model<AddressDocument>,
   ) {}
   async createAddress(address: AddressDto, req: Request): Promise<Address> {
-    let decode: any = jwt_decode(req?.headers?.authorization);
-    let newAddress = {
+    const decode: any = jwt_decode(req?.headers?.authorization);
+    const newAddress = {
       ...address,
       userId: decode?.user?.id,
     };
@@ -25,7 +25,7 @@ export class AddressService {
     query: GetAddressQueryDto,
     req: Request,
   ): Promise<Address[]> {
-    let decode: any = jwt_decode(req?.headers?.authorization);
+    const decode: any = jwt_decode(req?.headers?.authorization);
     return await this.addressModel
       .find({ userId: decode?.user?.id })
       .select('-userId')

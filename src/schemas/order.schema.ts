@@ -21,7 +21,7 @@ export class Order {
   products: {
     quantity: number;
     productId: Products;
-    unit: String;
+    unit: string;
   }[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Coupon' })

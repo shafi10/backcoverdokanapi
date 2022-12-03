@@ -18,11 +18,11 @@ export class OrderService {
     @InjectModel(Address.name) private addressModel: Model<AddressDocument>,
   ) {}
   async createAddress(order: OrderDto, req: Request): Promise<Order> {
-    let decode: any = jwt_decode(req?.headers?.authorization);
-    let { newProduct, totalPrice, totalOrginalPrice } =
+    const decode: any = jwt_decode(req?.headers?.authorization);
+    const { newProduct, totalPrice, totalOrginalPrice } =
       await this.getProductDetails(order?.products);
 
-    let newAddress = {
+    const newAddress = {
       ...order,
       orderStatus: 'Pending',
       orderAmount: totalPrice,
@@ -34,15 +34,15 @@ export class OrderService {
   }
 
   async getOrderInfo(id: string): Promise<any> {
-    let info = await this.orderModel.findById(id);
+    const info = await this.orderModel.findById(id);
     if (!info) {
       return {
         status: 'Product not found',
       };
     }
-    let pInfo = info.toObject();
-    let addressInfo = await this.addressModel.findById(pInfo?.address_id);
-    let { newProduct, totalPrice, totalOrginalPrice } =
+    const pInfo = info.toObject();
+    const addressInfo = await this.addressModel.findById(pInfo?.address_id);
+    const { newProduct, totalPrice, totalOrginalPrice } =
       await this.getProductDetails(pInfo?.products);
     return {
       ...pInfo,
@@ -54,22 +54,22 @@ export class OrderService {
   }
 
   async getProductDetails(products) {
-    let newProduct = [];
+    const newProduct = [];
     let totalPrice = 0;
     let totalOrginalPrice = 0;
     for (let i = 0; i < products?.length; i++) {
-      let pInfo = await this.productModel.findById(products[i]?.productId);
+      const pInfo = await this.productModel.findById(products[i]?.productId);
       // let pUnit = pInfo?.unit_prices?.find(
       //   (data) => data?.unit === products[i]?.unit,
       // );
-      let orderPrice = discountPriceCalculation(pInfo, pInfo?.price);
-      let discountPrice = orderPrice * products[i]?.quantity;
-      let originalPrice = pInfo?.price * products[i]?.quantity;
+      const orderPrice = discountPriceCalculation(pInfo, pInfo?.price);
+      const discountPrice = orderPrice * products[i]?.quantity;
+      const originalPrice = pInfo?.price * products[i]?.quantity;
 
       totalPrice += discountPrice;
       totalOrginalPrice += originalPrice;
 
-      let info = {
+      const info = {
         ...products[i],
         ...pInfo.toObject(),
         discountPrice: discountPrice,
@@ -98,7 +98,7 @@ export class OrderService {
 
   async cancelOrder(id: string): Promise<GetStatus> {
     try {
-      let updateDto = {
+      const updateDto = {
         orderStatus: 'Canceled',
         isActive: false,
       };

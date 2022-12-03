@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { config } from 'config';
 import { Observable } from 'rxjs';
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -10,7 +10,7 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request?.headers?.authorization?.split(' ')[1];
-    const verify = jwt.verify(
+    const verify: any = jwt.verify(
       token,
       config?.jwtSecret,
       function (err, decoded) {

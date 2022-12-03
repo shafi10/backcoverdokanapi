@@ -19,7 +19,7 @@ export class Cart {
   productList: {
     quantity: number;
     productId: string;
-    unit: String;
+    unit: string;
   }[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Auth' })

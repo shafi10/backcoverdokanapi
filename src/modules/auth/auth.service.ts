@@ -8,7 +8,7 @@ import {
   UpdateAuthDto,
 } from '../../dto/create-auth.dto';
 import jwt_decode from 'jwt-decode';
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 import { config } from '../../../config';
 import { Response, Request } from 'express';
 
@@ -24,15 +24,15 @@ export class AuthService {
         .status(HttpStatus.BAD_REQUEST)
         .send({ message: 'Invalid request' });
     }
-    let decode: any = jwt_decode(user?.token);
-    let isUser = await this.authModel.findOne({ AuthId: decode.user_id });
+    const decode: any = jwt_decode(user?.token);
+    const isUser = await this.authModel.findOne({ AuthId: decode.user_id });
     if (isUser) {
       return response
         .status(HttpStatus.BAD_REQUEST)
         .send({ message: 'Patient Already registered' });
     }
 
-    let newUser = {
+    const newUser = {
       name: user?.name,
       AuthId: decode?.user_id,
       age: user?.age,
@@ -72,8 +72,8 @@ export class AuthService {
         .status(HttpStatus.BAD_REQUEST)
         .send({ message: 'Invalid request' });
     }
-    let decode: any = jwt_decode(user?.token);
-    let isUser = await this.authModel.findOne({ AuthId: decode.user_id });
+    const decode: any = jwt_decode(user?.token);
+    const isUser = await this.authModel.findOne({ AuthId: decode.user_id });
     if (!isUser) {
       return response
         .status(HttpStatus.BAD_REQUEST)
@@ -101,12 +101,12 @@ export class AuthService {
   }
 
   async findAnUser(req: Request): Promise<Auth> {
-    let decode: any = jwt_decode(req?.headers?.authorization);
+    const decode: any = jwt_decode(req?.headers?.authorization);
     return await this.authModel.findOne({ _id: decode?.user?.id });
   }
 
   async update(updateProfile: UpdateAuthDto, req: Request): Promise<Auth> {
-    let decode: any = jwt_decode(req?.headers?.authorization);
+    const decode: any = jwt_decode(req?.headers?.authorization);
     console.log(updateProfile, 'hh');
     return await this.authModel.findByIdAndUpdate(
       decode?.user?.id,

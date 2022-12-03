@@ -31,12 +31,12 @@ export class ProductsService {
     //   })
     //   .limit(query?.limit);
 
-    let productsListbyCategories = [];
+    const productsListbyCategories = [];
     for (let i = 0; i < categoryList?.length; i++) {
       const products = await this.productModel
         .find({ categoryId: categoryList[i]._id })
         .limit(query?.limit);
-      let newList = {
+      const newList = {
         categoryInfo: categoryList[i],
         productsList: products,
       };

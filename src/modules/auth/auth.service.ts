@@ -107,7 +107,6 @@ export class AuthService {
 
   async update(updateProfile: UpdateAuthDto, req: Request): Promise<Auth> {
     const decode: any = jwt_decode(req?.headers?.authorization);
-    console.log(updateProfile, 'hh');
     return await this.authModel.findByIdAndUpdate(
       decode?.user?.id,
       updateProfile,

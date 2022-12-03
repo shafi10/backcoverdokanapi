@@ -1,0 +1,114 @@
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import mongoose, { Model } from 'mongoose';
+import { Order, OrderDocument } from '../../schemas/order.schema';
+import { Products, ProductsDocument } from '../../schemas/products.schema';
+import { Address, AddressDocument } from '../../schemas/address.schema';
+import { OrderDto, UpdateOrder } from 'src/dto/create-order.dto';
+import jwt_decode from 'jwt-decode';
+import { Request } from 'express';
+import { discountPriceCalculation } from 'utils/discount';
+import { GetStatus } from 'utils/types';
+
+@Injectable()
+export class OrderService {
+  constructor(
+    @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
+    @InjectModel(Products.name) private productModel: Model<ProductsDocument>,
+    @InjectModel(Address.name) private addressModel: Model<AddressDocument>,
+  ) {}
+  async createAddress(order: OrderDto, req: Request): Promise<Order> {
+    let decode: any = jwt_decode(req?.headers?.authorization);
+    let { newProduct, totalPrice, totalOrginalPrice } =
+      await this.getProductDetails(order?.products);
+
+    let newAddress = {
+      ...order,
+      orderStatus: 'Pending',
+      orderAmount: totalPrice,
+      originalAmount: totalOrginalPrice,
+      userId: decode?.user?.id,
+    };
+    const newOrder = new this.orderModel(newAddress);
+    return await newOrder.save();
+  }
+
+  async getOrderInfo(id: string): Promise<any> {
+    let info = await this.orderModel.findById(id);
+    if (!info) {
+      return {
+        status: 'Product not found',
+      };
+    }
+    let pInfo = info.toObject();
+    let addressInfo = await this.addressModel.findById(pInfo?.address_id);
+    let { newProduct, totalPrice, totalOrginalPrice } =
+      await this.getProductDetails(pInfo?.products);
+    return {
+      ...pInfo,
+      products: newProduct,
+      address: addressInfo,
+      totalPrice,
+      totalOrginalPrice,
+    };
+  }
+
+  async getProductDetails(products) {
+    let newProduct = [];
+    let totalPrice = 0;
+    let totalOrginalPrice = 0;
+    for (let i = 0; i < products?.length; i++) {
+      let pInfo = await this.productModel.findById(products[i]?.productId);
+      // let pUnit = pInfo?.unit_prices?.find(
+      //   (data) => data?.unit === products[i]?.unit,
+      // );
+      let orderPrice = discountPriceCalculation(pInfo, pInfo?.price);
+      let discountPrice = orderPrice * products[i]?.quantity;
+      let originalPrice = pInfo?.price * products[i]?.quantity;
+
+      totalPrice += discountPrice;
+      totalOrginalPrice += originalPrice;
+
+      let info = {
+        ...products[i],
+        ...pInfo.toObject(),
+        discountPrice: discountPrice,
+        originalPrice: originalPrice,
+      };
+      newProduct.push(info);
+    }
+    return { newProduct, totalPrice, totalOrginalPrice };
+  }
+
+  async getOrders(): Promise<Order[]> {
+    return await this.orderModel.find();
+  }
+
+  async updateStatus(id: string, updateDto: UpdateOrder): Promise<GetStatus> {
+    try {
+      await this.orderModel.findByIdAndUpdate(id, updateDto, {
+        new: true,
+      });
+      return {
+        status: '200',
+        message: 'Cancel order successful',
+      };
+    } catch (error) {}
+  }
+
+  async cancelOrder(id: string): Promise<GetStatus> {
+    try {
+      let updateDto = {
+        orderStatus: 'Canceled',
+        isActive: false,
+      };
+      await this.orderModel.findByIdAndUpdate(id, updateDto, {
+        new: true,
+      });
+      return {
+        status: '200',
+        message: 'Cancel order successful',
+      };
+    } catch (error) {}
+  }
+}

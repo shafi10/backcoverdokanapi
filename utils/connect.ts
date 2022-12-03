@@ -2,6 +2,7 @@ import { config } from '../config';
 import * as Mongoose from 'mongoose';
 
 export async function connectToDatabase() {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   await Mongoose.connect(config.dbURL!);
   const { connection } = Mongoose;
   connection.on('connected', () => {

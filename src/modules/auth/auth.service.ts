@@ -29,7 +29,7 @@ export class AuthService {
     if (isUser) {
       return response
         .status(HttpStatus.BAD_REQUEST)
-        .send({ message: 'Patient Already registered' });
+        .send({ message: 'User Already registered' });
     }
 
     const newUser = {

@@ -10,6 +10,7 @@ import { CartModule } from './modules/cart/cart.module';
 import { OrderModule } from './modules/order/order.module';
 import { BannerModule } from './modules/banner/banner.module';
 import { HomeModule } from './modules/home/home.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { HomeModule } from './modules/home/home.module';
     CartModule,
     OrderModule,
     BannerModule,
+    AdminModule
   ],
 })
 export class AppModule {}

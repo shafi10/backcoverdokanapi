@@ -3,7 +3,6 @@ import {
   Get,
   Body,
   Post,
-  Query,
   Param,
   Delete,
   Put,
@@ -13,46 +12,51 @@ import {
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { Admin } from '../../schemas/admin.schema';
-import { AdminDto, AdminLoginDto } from 'src/dto/create-admin.dto';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { Request,Response } from 'express';
+import {
+  AdminDto,
+  AdminLoginDto,
+  AdminUpdateDto,
+} from 'src/dto/create-admin.dto';
+import { Request, Response } from 'express';
+import { AdminAuthGuard } from 'src/guards/admin.guard';
 
 @Controller('admin')
-// @UseGuards(AuthGuard)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @Post("signin")
+  @Post('/signin')
   postLogin(
     @Body() adminDto: AdminLoginDto,
-    @Req() req: Request,
-  ): Promise<Admin> {
-    return this.adminService.adminLogin(adminDto, req);
+    @Res() res: Response,
+  ): Promise<Admin | Response> {
+    return this.adminService.adminLogin(adminDto, res);
   }
 
-  @Post("signup")
-  postSignup(
-    @Body() adminDto: AdminDto,
-    @Res() response: Response,
-  ): Promise<Admin|Response> {
-    return this.adminService.createAdmin(adminDto, response);
+  @Post('/signup')
+  @UseGuards(AdminAuthGuard)
+  postSignup(@Body() adminDto: AdminDto): Promise<Admin | Response> {
+    return this.adminService.createAdmin(adminDto);
   }
 
   @Get()
-  async getAddress(@Query() query: any, @Req() req: Request) {
-    return await this.adminService.findAllAddress(query, req);
+  @UseGuards(AdminAuthGuard)
+  async getAdmin() {
+    return await this.adminService.findAllAdmin();
   }
 
   @Delete(':id')
+  @UseGuards(AdminAuthGuard)
   delete(@Param('id') id: string): Promise<Admin> {
-    return this.adminService.delete(id);
+    return this.adminService.deleteAdmin(id);
   }
 
   @Put(':id')
+  @UseGuards(AdminAuthGuard)
   update(
-    @Body() updateAddressDto: AdminDto,
+    @Body() updateAddressDto: AdminUpdateDto,
     @Param('id') id: string,
+    @Req() req: Request,
   ): Promise<Admin> {
-    return this.adminService.update(id, updateAddressDto);
+    return this.adminService.updateAdmin(id, updateAddressDto, req);
   }
 }

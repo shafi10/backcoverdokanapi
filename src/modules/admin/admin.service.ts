@@ -1,63 +1,93 @@
-import { Injectable,HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Admin, AdminDocument } from '../../schemas/admin.schema';
-import { AdminDto, AdminLoginDto } from '../../dto/create-admin.dto';
+import {
+  AdminDto,
+  AdminLoginDto,
+  AdminUpdateDto,
+} from '../../dto/create-admin.dto';
+import { Request, Response } from 'express';
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+import { config } from 'config';
 import jwt_decode from 'jwt-decode';
-import { Response, Request } from 'express';
-// const bcrypt = require('bcryptjs')
+
+const saltRounds = 10;
 
 @Injectable()
 export class AdminService {
   constructor(
     @InjectModel(Admin.name) private adminModel: Model<AdminDocument>,
   ) {}
-  async adminLogin(address: AdminLoginDto, req: Request): Promise<Admin> {
-    const decode: any = jwt_decode(req?.headers?.authorization);
-    const newAddress = {
-      ...address,
-      userId: decode?.user?.id,
+  async adminLogin(loginDto: AdminLoginDto, response: Response): Promise<any> {
+    const isAdmin = await this.adminModel.findOne({ email: loginDto?.email });
+    if (!isAdmin) {
+      throw new HttpException('Invalid Request', HttpStatus.BAD_REQUEST);
+    }
+
+    let isMatch = await bcrypt.compare(loginDto?.password, isAdmin.password);
+    if (!isMatch) {
+      throw new HttpException('Invalid Request', HttpStatus.BAD_REQUEST);
+    }
+
+    const payload = {
+      admin: {
+        id: isAdmin?._id,
+      },
     };
-    const newProduct = new this.adminModel(newAddress);
-    return await newProduct.save();
+
+    const token = await jwt.sign(payload, config?.jwtAdminSecret, {
+      expiresIn: 360000,
+    });
+    response.json({ token });
   }
 
-  async createAdmin(
-    adminDto: AdminDto,
-    response: Response,
-  ): Promise<Admin | Response> {
+  async createAdmin(adminDto: AdminDto): Promise<Admin | Response> {
     const user = await this.adminModel.findOne({ email: adminDto?.email });
     if (user) {
-      // return response
-      // .status(HttpStatus.BAD_REQUEST)
-      // .send({ message: 'User Already registered' });
-      throw new HttpException('User Already registered', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'User Already registered',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-    // const salt = await bcrypt.genSalt(10)
-    // const hashpass = await bcrypt.hash(adminDto?.password , salt)
-    // let admin = {
-    //   ...adminDto,
-    //   password: hashpass
-    // }
-    const newAdmin = new this.adminModel(adminDto);
-    return await newAdmin.save();
+
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hash = await bcrypt.hash(adminDto?.password, salt);
+
+    let admin = {
+      ...adminDto,
+      password: hash,
+    };
+
+    const newAdmin = new this.adminModel(admin);
+    return newAdmin.save();
   }
 
-  async findAllAddress(query: any, req: Request): Promise<Admin[]> {
-    const decode: any = jwt_decode(req?.headers?.authorization);
-    return await this.adminModel
-      .find({ userId: decode?.user?.id })
-      .select('-userId')
-      .limit(query?.limit);
+  async findAllAdmin(): Promise<Admin[]> {
+    return await this.adminModel.find().select('-password');
   }
 
-  async delete(id: string): Promise<Admin> {
+  async deleteAdmin(id: string): Promise<Admin> {
     return await this.adminModel.findByIdAndRemove(id);
   }
 
-  async update(id: string, address: AdminDto): Promise<Admin> {
-    return await this.adminModel.findByIdAndUpdate(id, address, {
-      new: true,
-    });
+  async updateAdmin(
+    id: string,
+    address: AdminUpdateDto,
+    req: Request,
+  ): Promise<Admin> {
+    const decode: any = jwt_decode(req?.headers?.authorization);
+    if (decode?.admin.id !== id) {
+      throw new HttpException('Admin not found', HttpStatus.BAD_REQUEST);
+    }
+    const isAdmin = await this.adminModel.findOne({ _id: id });
+    if (isAdmin) {
+      return await this.adminModel.findByIdAndUpdate(id, address, {
+        new: true,
+      });
+    }
+
+    throw new HttpException('Admin not found', HttpStatus.BAD_REQUEST);
   }
 }

@@ -8,7 +8,7 @@ import {
   UpdateAuthDto,
 } from '../../dto/create-auth.dto';
 import jwt_decode from 'jwt-decode';
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 import { config } from '../../../config';
 import { Response, Request } from 'express';
 

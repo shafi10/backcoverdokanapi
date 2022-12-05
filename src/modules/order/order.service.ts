@@ -17,7 +17,7 @@ export class OrderService {
     @InjectModel(Products.name) private productModel: Model<ProductsDocument>,
     @InjectModel(Address.name) private addressModel: Model<AddressDocument>,
   ) {}
-  async createAddress(order: OrderDto, req: Request): Promise<Order> {
+  async createOrder(order: OrderDto, req: Request): Promise<Order> {
     const decode: any = jwt_decode(req?.headers?.authorization);
     const { newProduct, totalPrice, totalOrginalPrice } =
       await this.getProductDetails(order?.products);
@@ -84,6 +84,11 @@ export class OrderService {
     return await this.orderModel.find();
   }
 
+  async getUserOrders(req: Request): Promise<Order[]> {
+    const decode: any = jwt_decode(req?.headers?.authorization);
+    return await this.orderModel.find({ userId: decode?.user.id });
+  }
+
   async updateStatus(id: string, updateDto: UpdateOrder): Promise<GetStatus> {
     try {
       await this.orderModel.findByIdAndUpdate(id, updateDto, {
@@ -91,7 +96,7 @@ export class OrderService {
       });
       return {
         status: '200',
-        message: 'Cancel order successful',
+        message: 'Update order status',
       };
     } catch (error) {}
   }

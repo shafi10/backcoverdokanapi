@@ -1,4 +1,10 @@
-import { ArrayMinSize, IsArray, IsEmail, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+} from 'class-validator';
 
 export class AdminDto {
   @IsString()
@@ -19,9 +25,20 @@ export class AdminDto {
 }
 
 export class AdminLoginDto {
- @IsString()
+  @IsString()
   readonly email: string;
 
-  @IsInt()
+  @IsString()
+  @IsNotEmpty()
   readonly password: string;
+}
+
+export class AdminUpdateDto {
+  @IsString()
+  readonly name: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMinSize(1)
+  readonly roles: string[];
 }

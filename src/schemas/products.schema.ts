@@ -62,6 +62,9 @@ export class Products {
 
   @Prop()
   gallery: Gallery[];
+
+  @Prop({ default: true })
+  isActive: boolean;
 }
 
 export const ProductsSchema = SchemaFactory.createForClass(Products);

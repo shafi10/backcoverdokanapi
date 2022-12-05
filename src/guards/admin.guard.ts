@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 const jwt = require('jsonwebtoken');
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AdminAuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
     const token = request?.headers?.authorization?.split(' ')[1];
     const verify: any = jwt.verify(
       token,
-      config?.jwtSecret,
+      config?.jwtAdminSecret,
       function (err, decoded) {
         if (err) {
           return false;
@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
       },
     );
 
-    if (verify?.user?.authId) {
+    if (verify?.admin?.id) {
       return true;
     }
     return false;

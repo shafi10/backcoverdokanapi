@@ -21,9 +21,6 @@ export class CreateProductsDto {
   readonly name: string;
 
   @IsString()
-  readonly category_name: string;
-
-  @IsString()
   readonly discount_type: string;
 
   @IsString()
@@ -47,7 +44,7 @@ export class CreateProductsDto {
   @IsString()
   readonly slug: string;
 
-  @IsString()
+  @IsInt()
   readonly price: number;
 
   // @ValidateNested()

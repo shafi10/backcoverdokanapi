@@ -12,6 +12,6 @@ export class BannerDto {
 }
 
 export class GetBannerQueryDto {
-  @IsInt()
-  readonly limit: number;
+  @IsString()
+  readonly limit: string;
 }

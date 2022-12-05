@@ -15,6 +15,6 @@ export class CategoryDto {
 }
 
 export class GetCategoryQueryDto {
-  @IsInt()
-  readonly limit: number;
+  @IsString()
+  readonly limit: string;
 }

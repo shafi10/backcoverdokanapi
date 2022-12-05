@@ -41,9 +41,6 @@ export class CreateProductsDto {
   @IsString()
   readonly strength: string;
 
-  @IsString()
-  readonly slug: string;
-
   @IsInt()
   readonly price: number;
 

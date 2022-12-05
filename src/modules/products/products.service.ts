@@ -17,8 +17,17 @@ export class ProductsService {
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
   ) {}
   async createProduct(product: CreateProductsDto): Promise<Products> {
-    const newProduct = new this.productModel(product);
-    return await newProduct.save();
+    try {
+      let newPInfo = {
+        ...product,
+        slug:
+          product?.name + product?.manufacturer_name + product?.generic_name,
+      };
+      const newProduct = new this.productModel(newPInfo);
+      return await newProduct.save();
+    } catch (error) {
+      throw new HttpException('Request is invalid', HttpStatus.BAD_REQUEST);
+    }
   }
 
   async findAllProducts(

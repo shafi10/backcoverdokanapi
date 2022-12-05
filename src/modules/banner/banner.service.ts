@@ -11,7 +11,7 @@ export class BannerService {
   ) {}
 
   async findBanner(query: GetBannerQueryDto): Promise<Banner[]> {
-    return await this.bannerModel.find().limit(query?.limit);
+    return await this.bannerModel.find().limit(+query?.limit);
   }
 
   async createBanner(banner: BannerDto): Promise<Banner> {

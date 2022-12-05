@@ -17,7 +17,7 @@ export class CategoryService {
   async findAllCategory(query: GetCategoryQueryDto): Promise<Category[]> {
     return await this.categoryModel
       .find({ is_active: true, is_visible: true })
-      .limit(query?.limit);
+      .limit(+query?.limit);
   }
 
   async delete(id: string): Promise<Category> {

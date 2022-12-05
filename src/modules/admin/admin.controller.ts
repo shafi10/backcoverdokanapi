@@ -33,7 +33,7 @@ export class AdminController {
   }
 
   @Post('/signup')
-  @UseGuards(AdminAuthGuard)
+  // @UseGuards(AdminAuthGuard)
   postSignup(@Body() adminDto: AdminDto): Promise<Admin | Response> {
     return this.adminService.createAdmin(adminDto);
   }

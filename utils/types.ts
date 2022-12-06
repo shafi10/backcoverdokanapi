@@ -8,3 +8,9 @@ export type unitPrice = {
   unit: string;
   unit_size: number;
 };
+
+export type cartInfo = {
+  quantity: number;
+  productId: string;
+  _id?: string;
+};

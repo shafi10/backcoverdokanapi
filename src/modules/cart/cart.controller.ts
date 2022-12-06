@@ -43,8 +43,8 @@ export class CartController {
     return this.cartService.deleteCartItem(id, req);
   }
 
-  @Delete(':id')
-  deleteCart(@Param('id') id: string): Promise<Cart> {
-    return this.cartService.delete(id);
+  @Delete('delete')
+  deleteCart(@Req() req: Request): Promise<Cart | GetStatus> {
+    return this.cartService.delete(req);
   }
 }

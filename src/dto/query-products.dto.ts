@@ -14,11 +14,11 @@ export class GetProductsQueryDto {
 }
 
 export class GetProductsSearchQueryDto {
-  @IsInt()
-  readonly skip: number;
+  @IsString()
+  readonly skip: string;
 
-  @IsInt()
-  readonly limit: number;
+  @IsString()
+  readonly limit: string;
 
   @IsString()
   readonly q: string;

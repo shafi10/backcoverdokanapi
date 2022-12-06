@@ -12,14 +12,14 @@ export class Cart {
       {
         quantity: { type: Number },
         productId: { type: String },
-        unit: { type: String },
+        // unit: { type: String },
       },
     ],
   })
   productList: {
     quantity: number;
     productId: string;
-    unit: string;
+    // unit: string;
   }[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Auth' })

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Cart, CartDocument } from '../../schemas/cart.schema';
@@ -6,7 +6,7 @@ import { Products, ProductsDocument } from '../../schemas/products.schema';
 import { CartDto } from '../../dto/create-cart.dto';
 import jwt_decode from 'jwt-decode';
 import { Request } from 'express';
-import { GetStatus } from 'utils/types';
+import { cartInfo, GetStatus } from 'utils/types';
 
 @Injectable()
 export class CartService {
@@ -51,7 +51,7 @@ export class CartService {
             {
               quantity: cartInfo?.quantity,
               productId: cartInfo?.productId,
-              unit: cartInfo?.unit,
+              // unit: cartInfo?.unit,
             },
           ],
         };
@@ -74,25 +74,28 @@ export class CartService {
         .select('-userId');
 
       const ProductList = [];
-      for (let i = 0; i < cartList.productList.length; i++) {
-        const info = await this.productModel.findOne({
-          _id: cartList.productList[i].productId,
-        });
+      if (cartList) {
+        for (let i = 0; i < cartList.productList.length; i++) {
+          const info = await this.productModel.findOne({
+            _id: cartList.productList[i].productId,
+          });
 
-        const newObj = {
-          productInfo: info,
-          cartInfo: cartList.productList[i],
-        };
+          const productINfo = info.toObject();
+          const cartINfo: cartInfo = cartList.productList[i];
 
-        ProductList.push(newObj);
+          const newObj = {
+            ...productINfo,
+            quantity: cartINfo?.quantity,
+            cartId: cartINfo?._id,
+            id: cartINfo?.productId,
+          };
+
+          ProductList.push(newObj);
+        }
+
+        return ProductList;
       }
-
-      const resObj = {
-        _id: cartList?._id,
-        productList: ProductList,
-      };
-
-      return resObj;
+      return [];
     } catch (error) {}
   }
 
@@ -121,12 +124,26 @@ export class CartService {
       );
       return {
         status: 'Success',
-        message: 'Remove cart successful',
+        message: 'Removed cart Item successful',
       };
-    } catch (error) {}
+    } catch (error) {
+      throw new HttpException('Invalid request', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  async delete(id: string): Promise<Cart> {
-    return await this.cartModel.findByIdAndRemove(id);
+  async delete(req: Request): Promise<Cart | GetStatus> {
+    const decode: any = jwt_decode(req?.headers?.authorization);
+    const isExists = await this.cartModel.findOne({
+      userId: decode?.user?.id,
+    });
+    try {
+      await this.cartModel.findByIdAndRemove(isExists._id.toString());
+      return {
+        status: 'Success',
+        message: 'Removed cart successfully',
+      };
+    } catch (error) {
+      throw new HttpException('Invalid request', HttpStatus.BAD_REQUEST);
+    }
   }
 }

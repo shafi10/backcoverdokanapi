@@ -20,7 +20,7 @@ export class SearchService {
     const regex = new RegExp(escapeRegex(query?.q), 'gi');
     return await this.searchModel
       .find({ medicine_name: { $regex: regex } })
-      .skip(query?.skip)
-      .limit(query?.limit);
+      .skip(+query?.skip)
+      .limit(+query?.limit);
   }
 }

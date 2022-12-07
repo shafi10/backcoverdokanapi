@@ -119,4 +119,26 @@ export class ProductsService {
     }
     throw new HttpException('Product not found', HttpStatus.BAD_REQUEST);
   }
+
+  async updateProductImage(files, id: string): Promise<Products | GetStatus> {
+    const product = await this.productModel.findById(id);
+    let images = files.map((data) => {
+      return {
+        original: data?.path,
+      };
+    });
+    let data = {
+      gallery: images,
+    };
+    if (product) {
+      await this.productModel.findByIdAndUpdate(id, data, {
+        new: true,
+      });
+      return {
+        status: 'Success',
+        message: 'Upload images successfully',
+      };
+    }
+    throw new HttpException('Product not found', HttpStatus.BAD_REQUEST);
+  }
 }

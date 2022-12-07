@@ -5,6 +5,7 @@ import { Address, AddressDocument } from '../../schemas/address.schema';
 import { AddressDto, GetAddressQueryDto } from '../../dto/create-address.dto';
 import jwt_decode from 'jwt-decode';
 import { Request } from 'express';
+import { GetStatus } from 'utils/types';
 
 @Injectable()
 export class AddressService {
@@ -29,16 +30,34 @@ export class AddressService {
     return await this.addressModel
       .find({ userId: decode?.user?.id })
       .select('-userId')
-      .limit(query?.limit);
+      .limit(+query?.limit);
   }
 
-  async delete(id: string): Promise<Address> {
-    return await this.addressModel.findByIdAndRemove(id);
+  async findAddressById(id: string): Promise<Address> {
+    try {
+      return await this.addressModel.findById(id);
+    } catch (error) {}
   }
 
-  async update(id: string, address: AddressDto): Promise<Address> {
-    return await this.addressModel.findByIdAndUpdate(id, address, {
-      new: true,
-    });
+  async delete(id: string): Promise<Address | GetStatus> {
+    try {
+      await this.addressModel.findByIdAndRemove(id);
+      return {
+        status: 'Success',
+        message: 'Delete address successful',
+      };
+    } catch (error) {}
+  }
+
+  async update(id: string, address: AddressDto): Promise<Address | GetStatus> {
+    try {
+      await this.addressModel.findByIdAndUpdate(id, address, {
+        new: true,
+      });
+      return {
+        status: 'Success',
+        message: 'Delete address successful',
+      };
+    } catch (error) {}
   }
 }

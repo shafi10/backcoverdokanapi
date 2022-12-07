@@ -77,7 +77,7 @@ export class AuthService {
     if (!isUser) {
       return response
         .status(HttpStatus.BAD_REQUEST)
-        .send({ message: 'Patient not registered' });
+        .send({ message: 'User not registered' });
     }
 
     const payload = {

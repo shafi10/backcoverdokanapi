@@ -15,6 +15,7 @@ import { Address } from '../../schemas/address.schema';
 import { AddressDto, GetAddressQueryDto } from 'src/dto/create-address.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Request } from 'express';
+import { GetStatus } from 'utils/types';
 
 @Controller('address')
 @UseGuards(AuthGuard)
@@ -34,8 +35,13 @@ export class AddressController {
     return await this.addressService.findAllAddress(query, req);
   }
 
+  @Get(':id')
+  async getAddressbyId(@Param('id') id: string) {
+    return await this.addressService.findAddressById(id);
+  }
+
   @Delete(':id')
-  delete(@Param('id') id: string): Promise<Address> {
+  delete(@Param('id') id: string): Promise<Address | GetStatus> {
     return this.addressService.delete(id);
   }
 
@@ -43,7 +49,7 @@ export class AddressController {
   update(
     @Body() updateAddressDto: AddressDto,
     @Param('id') id: string,
-  ): Promise<Address> {
+  ): Promise<Address | GetStatus> {
     return this.addressService.update(id, updateAddressDto);
   }
 }

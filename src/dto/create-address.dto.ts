@@ -1,17 +1,16 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class AddressDto {
-  @IsInt()
+  @IsString()
   readonly address_name: string;
 
   @IsString()
   readonly address: string;
-
-  @IsInt()
+  @IsString()
   readonly phone: string;
 }
 
 export class GetAddressQueryDto {
-  @IsInt()
-  readonly limit: number;
+  @IsString()
+  readonly limit: string;
 }

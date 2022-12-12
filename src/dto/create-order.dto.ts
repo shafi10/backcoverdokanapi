@@ -22,8 +22,8 @@ export class Products {
   @IsString()
   readonly productId: string;
 
-  @IsString()
-  readonly unit: string;
+  // @IsString()
+  // readonly unit: string;
 }
 
 export class UpdateOrder {

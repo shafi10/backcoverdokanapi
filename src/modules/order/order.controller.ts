@@ -22,7 +22,10 @@ export class OrderController {
 
   @Post()
   @UseGuards(AuthGuard)
-  postOrder(@Body() order: OrderDto, @Req() req: Request): Promise<Order> {
+  postOrder(
+    @Body() order: OrderDto,
+    @Req() req: Request,
+  ): Promise<Order | GetStatus> {
     return this.orderService.createOrder(order, req);
   }
 

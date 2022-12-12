@@ -132,16 +132,23 @@ export class CartService {
   }
 
   async delete(req: Request): Promise<Cart | GetStatus> {
-    const decode: any = jwt_decode(req?.headers?.authorization);
-    const isExists = await this.cartModel.findOne({
-      userId: decode?.user?.id,
-    });
     try {
-      await this.cartModel.findByIdAndRemove(isExists._id.toString());
-      return {
-        status: 'Success',
-        message: 'Removed cart successfully',
-      };
+      const decode: any = jwt_decode(req?.headers?.authorization);
+      const isExists = await this.cartModel.findOne({
+        userId: decode?.user?.id,
+      });
+      if (isExists) {
+        await this.cartModel.findByIdAndRemove(isExists._id.toString());
+        return {
+          status: 'Success',
+          message: 'Removed cart successfully',
+        };
+      } else {
+        return {
+          status: 'Error',
+          message: 'Invalid request',
+        };
+      }
     } catch (error) {
       throw new HttpException('Invalid request', HttpStatus.BAD_REQUEST);
     }

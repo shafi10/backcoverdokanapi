@@ -45,6 +45,9 @@ export class Order {
   @Prop({ required: true })
   originalAmount: number;
 
+  @Prop({ required: true })
+  deliveryAmount: number;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Auth' })
   userId: Auth;
 

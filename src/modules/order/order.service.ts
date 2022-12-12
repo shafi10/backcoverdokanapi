@@ -9,6 +9,7 @@ import jwt_decode from 'jwt-decode';
 import { Request } from 'express';
 import { discountPriceCalculation } from 'utils/discount';
 import { GetStatus } from 'utils/types';
+import { CartService } from '../cart/cart.service';
 
 @Injectable()
 export class OrderService {
@@ -16,21 +17,32 @@ export class OrderService {
     @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
     @InjectModel(Products.name) private productModel: Model<ProductsDocument>,
     @InjectModel(Address.name) private addressModel: Model<AddressDocument>,
+    private readonly cartService: CartService,
   ) {}
-  async createOrder(order: OrderDto, req: Request): Promise<Order> {
-    const decode: any = jwt_decode(req?.headers?.authorization);
-    const { newProduct, totalPrice, totalOrginalPrice } =
-      await this.getProductDetails(order?.products);
+  async createOrder(order: OrderDto, req: Request): Promise<Order | GetStatus> {
+    try {
+      const decode: any = jwt_decode(req?.headers?.authorization);
+      const { newProduct, totalPrice, totalOrginalPrice } =
+        await this.getProductDetails(order?.products);
 
-    const newAddress = {
-      ...order,
-      orderStatus: 'Pending',
-      orderAmount: totalPrice,
-      originalAmount: totalOrginalPrice,
-      userId: decode?.user?.id,
-    };
-    const newOrder = new this.orderModel(newAddress);
-    return await newOrder.save();
+      const newOrderInfo = {
+        ...order,
+        orderStatus: 'Pending',
+        orderAmount: totalPrice,
+        originalAmount: totalOrginalPrice,
+        deliveryAmount: totalPrice < 1000 ? 30 : 0,
+        userId: decode?.user?.id,
+      };
+      const newOrder = new this.orderModel(newOrderInfo);
+      const orderInfo = await newOrder.save();
+      this.cartService.delete(req);
+      return orderInfo;
+    } catch (error) {
+      return {
+        status: 'Error',
+        message: 'Order is not success',
+      };
+    }
   }
 
   async getOrderInfo(id: string): Promise<any> {
@@ -86,7 +98,20 @@ export class OrderService {
 
   async getUserOrders(req: Request): Promise<Order[]> {
     const decode: any = jwt_decode(req?.headers?.authorization);
-    return await this.orderModel.find({ userId: decode?.user.id });
+    let orders = [];
+
+    const orderInfo: any = await this.orderModel.find({
+      userId: decode?.user.id,
+    });
+    for (let i = 0; i < orderInfo?.length; i++) {
+      let address = await this.addressModel.findById(orderInfo[i]?.address_id);
+      let obj = {
+        ...orderInfo[i].toObject(),
+        address: address,
+      };
+      orders.push(obj);
+    }
+    return orders;
   }
 
   async updateStatus(id: string, updateDto: UpdateOrder): Promise<GetStatus> {

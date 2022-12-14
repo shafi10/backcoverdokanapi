@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { Cart } from '../../schemas/cart.schema';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { Request } from 'express';
 import { CartDto } from 'src/dto/create-cart.dto';
 import { GetStatus } from 'utils/types';

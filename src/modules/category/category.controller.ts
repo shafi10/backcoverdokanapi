@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Category } from '../../schemas/category.schema';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { CategoryDto, GetCategoryQueryDto } from 'src/dto/create-category.dto';
 
 @Controller('categories')

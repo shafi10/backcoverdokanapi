@@ -13,7 +13,7 @@ import {
 import { AddressService } from './address.service';
 import { Address } from '../../schemas/address.schema';
 import { AddressDto, GetAddressQueryDto } from 'src/dto/create-address.dto';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import { Request } from 'express';
 import { GetStatus } from 'utils/types';
 

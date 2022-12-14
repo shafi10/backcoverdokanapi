@@ -16,7 +16,7 @@ import {
   UpdateAuthDto,
 } from '../../dto/create-auth.dto';
 import { Response, Request } from 'express';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {

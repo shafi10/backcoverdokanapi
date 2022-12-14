@@ -18,7 +18,7 @@ import {
   AdminUpdateDto,
 } from 'src/dto/create-admin.dto';
 import { Request, Response } from 'express';
-import { AdminAuthGuard } from 'src/guards/admin.guard';
+import { AdminAuthGuard } from '../../guards/admin.guard';
 
 @Controller('admin')
 export class AdminController {

@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { AddressService } from './address.service';
 import { Address } from '../../schemas/address.schema';
-import { AddressDto, GetAddressQueryDto } from 'src/dto/create-address.dto';
+import { AddressDto, GetAddressQueryDto } from '../../dto/create-address.dto';
 import { AuthGuard } from '../../guards/auth.guard';
 import { Request } from 'express';
-import { GetStatus } from 'utils/types';
+import { GetStatus } from '../../../utils/types';
 
 @Controller('address')
 @UseGuards(AuthGuard)

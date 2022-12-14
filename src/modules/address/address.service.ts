@@ -5,7 +5,7 @@ import { Address, AddressDocument } from '../../schemas/address.schema';
 import { AddressDto, GetAddressQueryDto } from '../../dto/create-address.dto';
 import jwt_decode from 'jwt-decode';
 import { Request } from 'express';
-import { GetStatus } from 'utils/types';
+import { GetStatus } from '../../../utils/types';
 
 @Injectable()
 export class AddressService {

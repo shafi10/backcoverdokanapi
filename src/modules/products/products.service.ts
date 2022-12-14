@@ -7,8 +7,8 @@ import { CreateProductsDto } from '../../dto/create-products.dto';
 import {
   GetProductsQueryDto,
   GetProductsQuery,
-} from 'src/dto/query-products.dto';
-import { GetStatus } from 'utils/types';
+} from '../../dto/query-products.dto';
+import { GetStatus } from '../../../utils/types';
 
 @Injectable()
 export class ProductsService {

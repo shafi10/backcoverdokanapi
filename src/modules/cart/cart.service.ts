@@ -6,7 +6,7 @@ import { Products, ProductsDocument } from '../../schemas/products.schema';
 import { CartDto } from '../../dto/create-cart.dto';
 import jwt_decode from 'jwt-decode';
 import { Request } from 'express';
-import { cartInfo, GetStatus } from 'utils/types';
+import { cartInfo, GetStatus } from '../../../utils/types';
 
 @Injectable()
 export class CartService {

@@ -13,7 +13,10 @@ import {
 import { CategoryService } from './category.service';
 import { Category } from '../../schemas/category.schema';
 import { AuthGuard } from '../../guards/auth.guard';
-import { CategoryDto, GetCategoryQueryDto } from 'src/dto/create-category.dto';
+import {
+  CategoryDto,
+  GetCategoryQueryDto,
+} from '../../dto/create-category.dto';
 
 @Controller('categories')
 export class CategoryController {

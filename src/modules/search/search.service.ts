@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Products, ProductsDocument } from '../../schemas/products.schema';
 import { GetProductsSearchQueryDto } from '../../dto/query-products.dto';
-import { escapeRegex } from 'utils/connect';
+import { escapeRegex } from '../../../utils/connect';
 
 @Injectable()
 export class SearchService {

@@ -17,9 +17,9 @@ import { CreateProductsDto } from '../../dto/create-products.dto';
 import {
   GetProductsQueryDto,
   GetProductsQuery,
-} from 'src/dto/query-products.dto';
+} from '../../dto/query-products.dto';
 import { AdminAuthGuard } from '../../guards/admin.guard';
-import { GetStatus } from 'utils/types';
+import { GetStatus } from '../../../utils/types';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 

@@ -16,7 +16,7 @@ import {
   AdminDto,
   AdminLoginDto,
   AdminUpdateDto,
-} from 'src/dto/create-admin.dto';
+} from '../../dto/create-admin.dto';
 import { Request, Response } from 'express';
 import { AdminAuthGuard } from '../../guards/admin.guard';
 

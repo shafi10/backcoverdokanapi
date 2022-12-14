@@ -4,11 +4,11 @@ import mongoose, { Model } from 'mongoose';
 import { Order, OrderDocument } from '../../schemas/order.schema';
 import { Products, ProductsDocument } from '../../schemas/products.schema';
 import { Address, AddressDocument } from '../../schemas/address.schema';
-import { OrderDto, UpdateOrder } from 'src/dto/create-order.dto';
+import { OrderDto, UpdateOrder } from '../../dto/create-order.dto';
 import jwt_decode from 'jwt-decode';
 import { Request } from 'express';
 import { discountPriceCalculation } from 'utils/discount';
-import { GetStatus } from 'utils/types';
+import { GetStatus } from '../../../utils/types';
 import { CartService } from '../cart/cart.service';
 
 @Injectable()

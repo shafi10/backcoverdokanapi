@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { Order } from '../../schemas/order.schema';
-import { OrderDto, UpdateOrder } from 'src/dto/create-order.dto';
+import { OrderDto, UpdateOrder } from '../../dto/create-order.dto';
 import { AuthGuard } from '../../guards/auth.guard';
 import { Request } from 'express';
-import { GetStatus } from 'utils/types';
+import { GetStatus } from '../../../utils/types';
 import { AdminAuthGuard } from '../../guards/admin.guard';
 
 @Controller('order')

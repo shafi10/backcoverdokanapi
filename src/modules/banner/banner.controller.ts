@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Body, Req, Post } from '@nestjs/common';
 import { BannerService } from './banner.service';
-import { BannerDto, GetBannerQueryDto } from 'src/dto/create-banner.dto';
+import { BannerDto, GetBannerQueryDto } from '../../dto/create-banner.dto';
 import { Banner } from '../../schemas/banner.schema';
 
 @Controller('banner')

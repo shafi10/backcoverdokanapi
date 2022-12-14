@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { config } from 'config';
+import { config } from '../../config';
 import { Observable } from 'rxjs';
 const jwt = require('jsonwebtoken');
 

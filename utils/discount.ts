@@ -1,4 +1,4 @@
-import { Products } from 'src/schemas/products.schema';
+import { Products } from '../src/schemas/products.schema';
 // import { unitPrice } from './types';
 
 export const discountCalculate = (amount: number, percentage: number) => {

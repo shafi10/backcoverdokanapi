@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Category, CategoryDocument } from '../../schemas/category.schema';
-import { CategoryDto, GetCategoryQueryDto } from 'src/dto/create-category.dto';
+import {
+  CategoryDto,
+  GetCategoryQueryDto,
+} from '../../dto/create-category.dto';
 
 @Injectable()
 export class CategoryService {

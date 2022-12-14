@@ -1,7 +1,7 @@
 import { IsBoolean, IsInt, IsString } from 'class-validator';
 
 export class CategoryDto {
-  @IsInt()
+  @IsString()
   readonly name: string;
 
   @IsString()

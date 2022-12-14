@@ -12,18 +12,18 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Category } from '../../schemas/category.schema';
-import { AuthGuard } from '../../guards/auth.guard';
 import {
   CategoryDto,
   GetCategoryQueryDto,
 } from '../../dto/create-category.dto';
+import { AdminAuthGuard } from '../../guards/admin.guard';
 
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   postCategory(@Body() category: CategoryDto): Promise<Category> {
     return this.categoryService.createCategory(category);
   }
@@ -34,13 +34,13 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   delete(@Param('id') id: string): Promise<Category> {
     return this.categoryService.delete(id);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminAuthGuard)
   update(
     @Body() updateAddressDto: CategoryDto,
     @Param('id') id: string,

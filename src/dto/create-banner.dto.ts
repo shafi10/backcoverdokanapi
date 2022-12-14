@@ -1,13 +1,13 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class BannerDto {
-  @IsInt()
+  @IsString()
   readonly image: string;
 
   @IsString()
   readonly title: string;
 
-  @IsInt()
+  @IsString()
   readonly description: string;
 }
 

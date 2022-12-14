@@ -12,5 +12,11 @@
       "dest": "src/main.ts",
       "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
     }
-  ]
+  ],
+  "env": {
+    "MONGODB_URI": "mongodb+srv://shafi123:wptuvQsEUhpCaYEX@cluster0.pbgbr.mongodb.net/bazarApi",
+    "API_URL": "https://ecom-back-cover.onrender.com",
+    "JWTSECRET": "jwtSecret",
+    "ADMINJWTSECRET": "jwtAdminSecret"
+  }
 }

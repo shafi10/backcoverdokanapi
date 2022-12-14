@@ -6,11 +6,11 @@ export class GetProductsQuery {
 }
 
 export class GetProductsQueryDto {
-  @IsInt()
-  readonly skip: number;
+  @IsString()
+  readonly skip: string;
 
-  @IsInt()
-  readonly limit: number;
+  @IsString()
+  readonly limit: string;
 }
 
 export class GetProductsSearchQueryDto {

@@ -77,8 +77,8 @@ export class ProductsService {
   ): Promise<Products[]> {
     return await this.productModel
       .find({ categoryId: catId, isActive: true })
-      .skip(query?.skip)
-      .limit(query?.limit);
+      .skip(+query?.skip)
+      .limit(+query?.limit);
   }
 
   async delete(id: string): Promise<Products | GetStatus> {

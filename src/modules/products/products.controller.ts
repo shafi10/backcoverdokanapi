@@ -8,8 +8,8 @@ import {
   Delete,
   Put,
   UseGuards,
-  UseInterceptors,
-  UploadedFiles,
+  // UseInterceptors,
+  // UploadedFiles,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Products } from '../../schemas/products.schema';
@@ -20,8 +20,8 @@ import {
 } from '../../dto/query-products.dto';
 import { AdminAuthGuard } from '../../guards/admin.guard';
 import { GetStatus } from '../../../utils/types';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+// import { FilesInterceptor } from '@nestjs/platform-express';
+// import { diskStorage } from 'multer';
 
 @Controller('products')
 export class ProductsController {

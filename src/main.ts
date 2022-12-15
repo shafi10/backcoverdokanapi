@@ -11,7 +11,7 @@ const cors = {
     '*',
   ],
   methods: 'GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS',
-  preflightContinue: false,
+  preflightContinue: true,
   optionsSuccessStatus: 204,
   credentials: true,
   allowedHeaders: ['Accept', 'Content-Type', 'Authorization'],
@@ -19,7 +19,9 @@ const cors = {
 
 async function bootstrap() {
   // await connectToDatabase();
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+  });
   app.enableCors(cors);
   app.useGlobalPipes(new ValidationPipe());
   const Port = parseInt(process.env.PORT) || 3001;

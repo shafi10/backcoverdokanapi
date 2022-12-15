@@ -6,7 +6,11 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   // await connectToDatabase();
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  app.enableCors({
+    allowedHeaders: '*',
+    origin: '*',
+    credentials: true,
+  });
   app.useGlobalPipes(new ValidationPipe());
   const Port = parseInt(process.env.PORT) || 3001;
   await app.listen(Port);

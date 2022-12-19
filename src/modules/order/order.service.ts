@@ -129,7 +129,7 @@ export class OrderService {
   async cancelOrder(id: string): Promise<GetStatus> {
     try {
       const updateDto = {
-        orderStatus: 'Canceled',
+        orderStatus: 'Cancelled',
         isActive: false,
       };
       await this.orderModel.findByIdAndUpdate(id, updateDto, {

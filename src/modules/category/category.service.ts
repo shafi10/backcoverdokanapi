@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Category, CategoryDocument } from '../../schemas/category.schema';
 import {
   CategoryDto,
+  GetAllCategoryQueryDto,
   GetCategoryQueryDto,
 } from '../../dto/create-category.dto';
 
@@ -20,6 +21,14 @@ export class CategoryService {
   async findAllCategory(query: GetCategoryQueryDto): Promise<Category[]> {
     return await this.categoryModel
       .find({ is_active: true, is_visible: true })
+      .limit(+query?.limit);
+  }
+
+  async findListOfCategory(query: GetAllCategoryQueryDto): Promise<Category[]> {
+    return await this.categoryModel
+      .find()
+      .sort({ createdAt: 'descending' })
+      .skip(+query?.skip)
       .limit(+query?.limit);
   }
 

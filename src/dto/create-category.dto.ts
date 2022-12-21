@@ -18,3 +18,11 @@ export class GetCategoryQueryDto {
   @IsString()
   readonly limit: string;
 }
+
+export class GetAllCategoryQueryDto {
+  @IsString()
+  readonly skip: string;
+
+  @IsString()
+  readonly limit: string;
+}

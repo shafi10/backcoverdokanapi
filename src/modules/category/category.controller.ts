@@ -14,6 +14,7 @@ import { CategoryService } from './category.service';
 import { Category } from '../../schemas/category.schema';
 import {
   CategoryDto,
+  GetAllCategoryQueryDto,
   GetCategoryQueryDto,
 } from '../../dto/create-category.dto';
 import { AdminAuthGuard } from '../../guards/admin.guard';
@@ -31,6 +32,11 @@ export class CategoryController {
   @Get()
   async getCategories(@Query() query: GetCategoryQueryDto) {
     return await this.categoryService.findAllCategory(query);
+  }
+
+  @Get('/all')
+  async getAllCategories(@Query() query: GetAllCategoryQueryDto) {
+    return await this.categoryService.findListOfCategory(query);
   }
 
   @Delete(':id')

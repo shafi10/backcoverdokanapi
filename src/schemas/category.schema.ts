@@ -16,6 +16,9 @@ export class Category {
 
   @Prop({ required: true })
   is_visible: boolean;
+
+  @Prop({ default: Date.now() })
+  createdAt: Date;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

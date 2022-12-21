@@ -44,6 +44,12 @@ export class AdminController {
     return await this.adminService.findAllAdmin();
   }
 
+  @Get('/info')
+  @UseGuards(AdminAuthGuard)
+  async getAdminInfo(@Req() req: Request) {
+    return await this.adminService.findAdminInfo(req);
+  }
+
   @Delete(':id')
   @UseGuards(AdminAuthGuard)
   delete(@Param('id') id: string): Promise<Admin> {

@@ -68,6 +68,22 @@ export class AdminService {
     return await this.adminModel.find().select('-password');
   }
 
+  async findAdminInfo(req: Request): Promise<Admin> {
+    try {
+      const decode: any = jwt_decode(req?.headers?.authorization);
+      const admin = await this.adminModel
+        .findById(decode?.admin?.id)
+        .select('-password');
+      if (admin) {
+        return admin;
+      } else {
+        throw new HttpException('Admin not found', HttpStatus.BAD_REQUEST);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async deleteAdmin(id: string): Promise<Admin> {
     return await this.adminModel.findByIdAndRemove(id);
   }

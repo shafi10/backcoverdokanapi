@@ -38,6 +38,11 @@ export class ProductsController {
     return await this.prodService.findAllProducts(query);
   }
 
+  @Get('taq')
+  productsByTaq(@Query() query: GetProductsQuery): Promise<Products[]> {
+    return this.prodService.findProductsByTaq(query);
+  }
+
   @Get(':id')
   async findOne(
     @Param('id') id,
@@ -67,7 +72,7 @@ export class ProductsController {
     return this.prodService.update(id, updateProductDto);
   }
 
-  @Put('deactive/:id')
+  @Put('disable/:id')
   @UseGuards(AdminAuthGuard)
   disableProduct(@Param('id') id): Promise<Products | GetStatus> {
     return this.prodService.disableProduct(id);

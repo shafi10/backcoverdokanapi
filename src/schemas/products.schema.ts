@@ -65,6 +65,14 @@ export class Products {
 
   @Prop({ default: true })
   isActive: boolean;
+
+  @Prop({
+    type: [mongoose.Schema.Types.ObjectId],
+  })
+  taq: string[];
+
+  @Prop({ default: Date.now() })
+  createdAt: Date;
 }
 
 export const ProductsSchema = SchemaFactory.createForClass(Products);

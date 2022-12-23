@@ -11,6 +11,7 @@ import { OrderModule } from './modules/order/order.module';
 import { BannerModule } from './modules/banner/banner.module';
 import { HomeModule } from './modules/home/home.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { TaqModule } from './modules/taq/taq.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { AdminModule } from './modules/admin/admin.module';
     CartModule,
     OrderModule,
     BannerModule,
-    AdminModule
+    TaqModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

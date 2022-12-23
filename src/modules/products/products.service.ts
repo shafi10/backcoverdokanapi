@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Products, ProductsDocument } from '../../schemas/products.schema';
 import { Category, CategoryDocument } from '../../schemas/category.schema';
+import { Taq, TaqDocument } from '../../schemas/taq.schema';
 import { CreateProductsDto } from '../../dto/create-products.dto';
 import {
   GetProductsQueryDto,
@@ -15,6 +16,7 @@ export class ProductsService {
   constructor(
     @InjectModel(Products.name) private productModel: Model<ProductsDocument>,
     @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
+    @InjectModel(Taq.name) private taqModel: Model<TaqDocument>,
   ) {}
   async createProduct(product: CreateProductsDto): Promise<Products> {
     try {
@@ -140,5 +142,26 @@ export class ProductsService {
       };
     }
     throw new HttpException('Product not found', HttpStatus.BAD_REQUEST);
+  }
+
+  async findProductsByTaq(query: GetProductsQuery): Promise<Products[]> {
+    const taqList = await this.taqModel
+      .find({
+        is_active: true,
+      })
+      .select('_id name');
+    const productsList = [];
+    for (let i = 0; i < taqList?.length; i++) {
+      const products = await this.productModel
+        .find({ taq: taqList[i]._id.toString(), isActive: true })
+        .select('-taq')
+        .limit(+query?.limit);
+      const newList = {
+        taqInfo: taqList[i],
+        productsList: products,
+      };
+      productsList.push(newList);
+    }
+    return productsList;
   }
 }

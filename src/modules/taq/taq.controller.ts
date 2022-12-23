@@ -13,7 +13,7 @@ import {
 import { TaqService } from './taq.service';
 import { Taq } from '../../schemas/taq.schema';
 import { AdminAuthGuard } from '../../guards/admin.guard';
-import { TaqDto, GetAllTaqQueryDto } from 'src/dto/create-taq.dto';
+import { TaqDto, GetAllTaqQueryDto } from '../../../src/dto/create-taq.dto';
 
 @Controller('taq')
 export class TaqController {

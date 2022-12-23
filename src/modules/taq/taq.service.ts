@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Taq, TaqDocument } from '../../schemas/taq.schema';
-import { TaqDto, GetAllTaqQueryDto } from 'src/dto/create-taq.dto';
+import { TaqDto, GetAllTaqQueryDto } from '../../../src/dto/create-taq.dto';
 
 @Injectable()
 export class TaqService {

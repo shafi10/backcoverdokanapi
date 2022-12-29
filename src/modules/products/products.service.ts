@@ -39,6 +39,7 @@ export class ProductsService {
         .find({
           isActive: query?.q === 'true' ? true : false,
         })
+        .sort({ createdAt: 'descending' })
         .skip(+query?.skip)
         .limit(+query?.limit);
       return list;

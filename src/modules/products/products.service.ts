@@ -37,7 +37,7 @@ export class ProductsService {
     try {
       const list = await this.productModel
         .find({
-          isActive: query?.q,
+          isActive: query?.q === 'true' ? true : false,
         })
         .skip(+query?.skip)
         .limit(+query?.limit);

@@ -8,6 +8,7 @@ import { CreateProductsDto } from '../../dto/create-products.dto';
 import {
   GetProductsQueryDto,
   GetProductsQuery,
+  GetProductsSearchQueryDto,
 } from '../../dto/query-products.dto';
 import { GetStatus } from '../../../utils/types';
 
@@ -29,6 +30,20 @@ export class ProductsService {
       return await newProduct.save();
     } catch (error) {
       throw new HttpException('Request is invalid', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getAllProducts(query: GetProductsSearchQueryDto): Promise<Products[]> {
+    try {
+      const list = await this.productModel
+        .find({
+          is_active: query?.q,
+        })
+        .skip(+query?.skip)
+        .limit(+query?.limit);
+      return list;
+    } catch (error) {
+      throw new HttpException('Invalid Request', HttpStatus.BAD_REQUEST);
     }
   }
 

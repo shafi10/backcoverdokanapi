@@ -17,6 +17,7 @@ import { CreateProductsDto } from '../../dto/create-products.dto';
 import {
   GetProductsQueryDto,
   GetProductsQuery,
+  GetProductsSearchQueryDto,
 } from '../../dto/query-products.dto';
 import { AdminAuthGuard } from '../../guards/admin.guard';
 import { GetStatus } from '../../../utils/types';
@@ -26,6 +27,11 @@ import { GetStatus } from '../../../utils/types';
 @Controller('products')
 export class ProductsController {
   constructor(private readonly prodService: ProductsService) {}
+
+  @Get('list')
+  async getAllProducts(@Query() query: GetProductsSearchQueryDto) {
+    return await this.prodService.getAllProducts(query);
+  }
 
   @Post()
   @UseGuards(AdminAuthGuard)

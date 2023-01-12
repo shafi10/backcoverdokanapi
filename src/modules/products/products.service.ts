@@ -51,29 +51,57 @@ export class ProductsService {
   async findAllProducts(
     query: GetProductsQuery,
   ): Promise<{ categoryInfo: Category; productsList: Products[] }[]> {
-    const categoryList = await this.categoryModel.find({
-      is_active: true,
-      is_visible: true,
-    });
-    // const activeCatIds = categoryList.map((data) => data?._id);
-    // return await this.productModel
-    //   .find({
-    //     categoryId: { $in: activeCatIds },
-    //   })
-    //   .limit(query?.limit);
+    const productsListByCategories = await this.categoryModel.aggregate([
+      {
+        $match: {
+          $and: [{ is_active: true }, { is_visible: true }],
+        },
+      },
+      {
+        $lookup: {
+          from: 'products',
+          let: { item_Id: '$_id' },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ['$categoryId', '$$item_Id'] },
+              },
+            },
+            { $limit: +query?.limit },
+          ],
+          as: 'productsList',
+        },
+      },
+      {
+        $project: {
+          categoryInfo: {
+            _id: '$_id',
+            name: '$name',
+            image: '$image',
+          },
+          productsList: '$productsList',
+        },
+      },
+    ]);
 
-    const productsListbyCategories = [];
-    for (let i = 0; i < categoryList?.length; i++) {
-      const products = await this.productModel
-        .find({ categoryId: categoryList[i]._id, isActive: true })
-        .limit(+query?.limit);
-      const newList = {
-        categoryInfo: categoryList[i],
-        productsList: products,
-      };
-      productsListbyCategories.push(newList);
-    }
-    return productsListbyCategories;
+    return productsListByCategories;
+
+    // const categoryList = await this.categoryModel.find({
+    //   is_active: true,
+    //   is_visible: true,
+    // });
+    // const productsListbyCategories = [];
+    // for (let i = 0; i < categoryList?.length; i++) {
+    //   const products = await this.productModel
+    //     .find({ categoryId: categoryList[i]._id, isActive: true })
+    //     .limit(+query?.limit);
+    //   const newList = {
+    //     categoryInfo: categoryList[i],
+    //     productsList: products,
+    //   };
+    //   productsListbyCategories.push(newList);
+    // }
+    // return productsListbyCategories;
   }
 
   async findOne(
